@@ -1,40 +1,46 @@
-<template>
-  <header>
-      <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+<script setup>
+  import {ref} from 'vue'
+  let input = ref ("")
+  let todos = ref ([])
 
-  <main>
-    <TheWelcome />
-  </main>
+  function addToDo () {
+    todos.value.push(input.value)
+    input.value = ""
+  }
+
+  function deleteToDo (index) {
+    todos.value.splice(index, 1)
+  }
+</script>
+
+<template>
+  <h1>My ToDo Application</h1>
+
+  <input @keydown.enter ="addToDo" v-model="input">
+  <br>
+  <br>
+  <button   @click="addToDo">Add ToDo</button>
+
+  <ul>
+    <li class="li-style" v-for="(todo, index) in todos">
+      <button @click= "deleteToDo(index)">Delete</button>
+      {{ todo }}
+    </li>
+  </ul>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+<style>
+  button {
+    background-color: chartreuse;
+    height: 50px;
+    width: 100px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: forestgreen;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
+  .li-style {
+    list-style: none;
   }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
