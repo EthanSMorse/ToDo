@@ -3,8 +3,14 @@
   let input = ref ("")
   let todos = ref ([])
 
+
   function addToDo () {
-    todos.value.push(input.value)
+    if (input.value == "") {
+      alert ("Please put something in the text box.")
+    }
+    else {
+      todos.value.push({text: input.value, complete: false})
+    }
     input.value = ""
   }
 
@@ -19,14 +25,13 @@
   <input @keydown.enter ="addToDo" v-model="input">
   <br>
   <br>
-  <button   @click="addToDo">Add ToDo</button>
+  <button @click="addToDo">Add ToDo</button>
 
-  <ul>
-    <li class="li-style" v-for="(todo, index) in todos">
-      <button @click= "deleteToDo(index)">Delete</button>
-      {{ todo }}
-    </li>
-  </ul>
+  <div class="li-style" v-for="(todo, index) in todos">
+    <button @click= "deleteToDo(index)">Delete</button>
+    <input type="checkbox" v-model="todo.complete">
+    {{ todo.text }}
+  </div>
 </template>
 
 <style>
