@@ -31,13 +31,23 @@
       return true 
     }
   }
+
+  function activeFilter (todo) {
+    return todo.complete == false
+  }
+
+  function completeAll () {
+    for (let todo of todos.value) {
+      todo.complete = !todo.complete
+    }
+  }
 </script>
 
 <template>
   <h1 class="h1-box">My ToDo Application</h1>
 
   <div>
-    <button id="selectAll-style">Select All</button>
+    <button id="selectAll-style" @click="completeAll">Complete All</button>
     <input id="input-style" @keydown.enter ="addToDo" v-model="input">
     <button id="AddTD-style" @click="addToDo">Add ToDo</button>
   </div>
@@ -45,19 +55,21 @@
   <br>
   <br>
 
-  <div>
-    <input name="filter" type="radio" value="all" v-model="filter">
-    <input name="filter" type="radio" value="active" v-model="filter">
-    <input name="filter" type="radio" value="completed" v-model="filter">
+  <p id="counter-style" v-if="todos.length > 0">{{ todos.filter(activeFilter).length }} items left</p>
+
+  <div v-if="todos.length > 0">
+    <input name="filter" type="radio" value="all" v-model="filter"> All
+    <input name="filter" type="radio" value="active" v-model="filter"> Active
+    <input name="filter" type="radio" value="completed" v-model="filter"> Complete
   </div>
 
   <div class="li-style li-box" v-for="(todo, index) in todos.filter(todoFilter)" :class="{completed:todo.complete}">
-    <button @click= "deleteToDo(index)">Delete</button>
     <label class="container">
-      <input id="CB-style" type="checkbox" v-model="todo.complete">
+      <input type="checkbox" v-model="todo.complete">
       <span class="checkmark"></span>
     </label>
     {{ todo.text }}
+    <button id="deleteTD" @click= "deleteToDo(index)">Delete</button>
   </div>
 </template>
 
@@ -66,11 +78,11 @@
   body {
     background-color: forestgreen;
     text-align: center;
+    font-family: cursive;
   }
 
   h1 {
     color: gold;
-    font-family: cursive;
   }
 
   .h1-box {
@@ -117,12 +129,15 @@
     margin-left: 20px;
   }
 
+  #deleteTD {
+    float: right;
+  }
+
   .li-style {
     list-style: none;
     color: gold;
     margin: 10px;
     font-size: 25px;
-    font-family: cursive;
   }
 
   .li-box {
@@ -142,10 +157,11 @@
 
   .completed {
     text-decoration: line-through;
-    color: gray;
+    color: goldenrod;
   }
 
-  #CB-style {
+  #counter-style {
+    font-size: 25px;
   }
 
   .container {
@@ -174,15 +190,15 @@
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: #eee;
+  background-color: chartreuse;
 }
 
 .container:hover input ~ .checkmark {
-  background-color: #ccc;
+  background-color: forestgreen;
 }
 
 .container input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: chartreuse;
 }
 
 .checkmark:after {
@@ -200,7 +216,7 @@
   top: 5px;
   width: 5px;
   height: 10px;
-  border: solid white;
+  border: solid gold;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
