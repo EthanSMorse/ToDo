@@ -38,8 +38,13 @@
 
   function completeAll () {
     for (let todo of todos.value) {
-      todo.complete = !todo.complete
+      todo.complete = true
     }
+
+  }
+  
+  function deleteAll () {
+    todos.value = []
   }
 </script>
 
@@ -50,27 +55,36 @@
     <button id="selectAll-style" @click="completeAll">Complete All</button>
     <input id="input-style" @keydown.enter ="addToDo" v-model="input">
     <button id="AddTD-style" @click="addToDo">Add ToDo</button>
+    <br>
+    <button id="deleteAll-style" @click="deleteAll">Delete All</button>
   </div>
 
   <br>
   <br>
 
-  <p id="counter-style" v-if="todos.length > 0">{{ todos.filter(activeFilter).length }} items left</p>
+  <main>
+    <p id="counter-style" v-if="todos.length > 0">{{ todos.filter(activeFilter).length }} items left</p>
 
-  <div v-if="todos.length > 0">
-    <input name="filter" type="radio" value="all" v-model="filter"> All
-    <input name="filter" type="radio" value="active" v-model="filter"> Active
-    <input name="filter" type="radio" value="completed" v-model="filter"> Complete
-  </div>
+    <div v-if="todos.length > 0">
+      <form>
+          <input type="radio" id="all" value="all" name="filter" v-model="filter">
+          <label for="all">All</label>
+          <input type="radio" id="active" value="active" name="filter" v-model="filter">
+          <label for="active">Active</label>
+          <input type="radio" id="complete" value="completed" name="filter" v-model="filter">
+          <label for="complete">Complete</label>
+      </form>
+    </div>
 
-  <div class="li-style li-box" v-for="(todo, index) in todos.filter(todoFilter)" :class="{completed:todo.complete}">
-    <label class="container">
-      <input type="checkbox" v-model="todo.complete">
-      <span class="checkmark"></span>
-    </label>
-    {{ todo.text }}
-    <button id="deleteTD" @click= "deleteToDo(index)">Delete</button>
-  </div>
+    <div class="li-style li-box" v-for="(todo, index) in todos.filter(todoFilter)" :class="{completed:todo.complete}">
+      <button @click= "deleteToDo(index)">Delete</button>
+      <label class="container">
+        <input type="checkbox" v-model="todo.complete">
+        <span class="checkmark"></span>
+      </label>
+      {{ todo.text }}
+    </div>
+  </main>
 </template>
 
 <style>
@@ -125,18 +139,18 @@
     margin-right: 20px;
   }
 
-  #AddTD-style {
-    margin-left: 20px;
+  #deleteAll-style {
+    margin-right: 660px;
+    margin-top: 20px;
   }
 
-  #deleteTD {
-    float: right;
+  #AddTD-style {
+    margin-left: 20px;
   }
 
   .li-style {
     list-style: none;
     color: gold;
-    margin: 10px;
     font-size: 25px;
   }
 
@@ -161,7 +175,8 @@
   }
 
   #counter-style {
-    font-size: 25px;
+    font-size: 30px;
+    color: gold;
   }
 
   .container {
@@ -221,5 +236,58 @@
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 40px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: gold;
+    font-size: 25px;
+    margin: 10px;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 25px;
+    height: 25px;
+    border: 1px solid goldenrod;
+    border-radius: 100%;
+    background: chartreuse;
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: gold;
+    position: absolute;
+    top: 7.6px;
+    left: 7.6px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
 }
 </style>
